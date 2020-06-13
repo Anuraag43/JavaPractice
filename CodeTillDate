@@ -1,0 +1,597 @@
+
+--> Servlets Practiced.
+
+package Rampage;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.http.*;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+
+//@WebServlet("/")
+public class LoginServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	public LoginServlet() {
+
+	}
+
+	public void init() {
+		System.out.println(" I am in init method");
+		System.out.println(" Let's take it from here now and then");
+		System.out.println(" Way to go..");
+	}
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		System.out.println(" Hello World \n I'm alive");
+		PrintWriter out = response.getWriter();
+		out.print("<html><body>");
+		out.print("<b>hello simple <br> servlet</b>");
+		out.print("</body></html>");
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		System.out.println("Post Hello World");
+	}
+
+}
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>ServletExample</display-name>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+	<!-- <servlet> <description></description> <display-name>LoginServlet</display-name> 
+		<servlet-name>LoginServlet</servlet-name> <servlet-class>LoginServlet</servlet-class> 
+		<load-on-startup>1</load-on-startup> </servlet> <servlet-mapping> <servlet-name>LoginServlet</servlet-name> 
+		<url-pattern>/LoginServlet</url-pattern> </servlet-mapping> -->
+
+</web-app>
+
+
+
+package Rampage;
+
+import java.io.*;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.*;
+
+@WebServlet(value = "/loginPage", loadOnStartup = 1)
+public class Validation extends HttpServlet {
+	private static final long serialVersoinUID = 1L;
+
+	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		PrintWriter pwriter = response.getWriter();
+		String name = request.getParameter("UName");
+		String pass = request.getParameter("UPassw");
+
+		String country = request.getParameter("country");
+		System.out.println("Country:::" + country);
+
+		// Cookie
+		Cookie ck = new Cookie("UName", name);
+		response.addCookie(ck);
+
+		// HTTP Session
+		HttpSession session = request.getSession();
+		session.setAttribute("UName", name);
+		session.setAttribute("UPassw", pass);
+
+		if (name.equals("Sravan") && pass.equals("demo")) {
+			RequestDispatcher dis = request.getRequestDispatcher("welcome");
+			dis.forward(request, response);
+		} else { // Include
+			pwriter.print("User name or password is incorrect!" + name);
+			RequestDispatcher dis = request.getRequestDispatcher("index.html?UName" + name);
+			dis.include(request, response);
+		}
+//		else { //send Redirect
+//			response.setContentType("text/html");
+//			PrintWriter pw = response.getWriter();
+//			response.sendRedirect("http://www.google.com");
+//			pw.close();
+//	}
+	}
+
+}
+
+
+
+
+package Rampage;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
+ import javax.servlet.*;
+
+@WebListener
+public class LoginListener implements ServletContextListener{
+	
+	public void contextDestroyed(ServletContextEvent arg0) {
+		System.out.println("Server stopped");
+	}
+	
+	public void contextInitialized(ServletContextEvent arg0) {
+		System.out.println("Server started");
+	}
+}
+
+
+<form action = "/loginPage" method = "post>
+	kbc : <input type = "text" name = "check"/><br/>
+	UserName: <input type = "text" name = "UName"/><br/>
+	Password: <input type = "password" name = "UPassw"/><br/>
+	<input type = "hidden" name = "country" value ="India">
+	<input type = "submit" value = "SUBMIT" />
+</form>	
+
+----------------------------------------------------------------------------------------------------------
+--> String Buffer vs String Builder
+package nexcruit;
+
+import java.util.GregorianCalendar;
+
+public class Comeback {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.gc();
+		long start = new GregorianCalendar().getTimeInMillis();
+		long startMemory = Runtime.getRuntime().freeMemory();
+		System.out.println(startMemory);
+		StringBuffer sb = new StringBuffer();
+		// StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 10000000; i++) {
+			sb.append(":").append(i);
+		}
+		long end = new GregorianCalendar().getTimeInMillis();
+		long endMemory = Runtime.getRuntime().freeMemory();
+		System.out.println("Start memory"+startMemory);
+		System.out.println("End memory"+endMemory);
+//		System.out.println("Time Taken:" + (end - start));
+//		System.out.println("Memory used:" + (startMemory - endMemory));
+//		System.out.println();
+//		System.out.println();
+		long start1 = new GregorianCalendar().getTimeInMillis();
+		long startMemory1 = Runtime.getRuntime().freeMemory();
+		StringBuilder sb1 = new StringBuilder();
+		for (int i = 0; i < 10000000; i++) {
+			sb1.append(":").append(i);
+		}
+//		long end1 = new GregorianCalendar().getTimeInMillis();
+//		long endMemory1 = Runtime.getRuntime().freeMemory();
+//		System.out.println("Time Taken:" + (end1 - start1));
+//		System.out.println("Memory used:" + (startMemory1 - endMemory1));
+
+	}
+}
+
+
+----------------------------------------------------------------------------------------------------------
+--> Multi Threading
+package nexcruit;
+
+public class HelloWorld implements Runnable {
+	private Thread t;
+	private String threadName;
+
+	HelloWorld(String name) {
+		threadName = name;
+		System.out.println("Creating new thread: " + threadName);
+	}
+
+	public void run() {
+		System.out.println("Running the thread: " + threadName);
+		try {
+			for (int i = 4; i > 0; i--) {
+				System.out.println("Thread name: " + threadName + " , iteration: " + i);
+				Thread.sleep(0);
+			}
+		} catch (InterruptedException e) {
+			System.out.println("Thread " + threadName + " is interrupted.");
+//			System.out.println("checking: "+threadName +" is interrupted: "+t.isInterrupted());
+		}
+		System.out.println("Thread " + threadName + " is exiting");
+	}
+
+	public void start() {
+		System.out.println("Starting thread: " + threadName);
+		if (t == null) {
+			t = new Thread(this, threadName);
+			t.start();
+//			Thread.yield();
+//			t.interrupt();
+			
+
+		}
+	}
+
+}
+
+----------------------------------------------------------------------------------------------------------
+--> Collection's iterator
+import java.util.*;
+public class IteratorFailFastTest {
+
+	private List<Integer> list = new ArrayList<>();
+
+	public IteratorFailFastTest() {
+		for (int i = 0; i < 10_000; i++) {
+			list.add(i);
+		}
+	}
+
+	public void runUpdateThread() {
+		Thread thread1 = new Thread(new Runnable() {
+
+			public void run() {
+				for (int i = 10_000; i < 20_000; i++) {
+					list.add(i);
+				}
+			}
+		});
+
+		thread1.start();
+	}
+
+	// adds some elements to the list
+
+	public void runIteratorThread() {
+		Thread thread2 = new Thread(new Runnable() {
+
+			public void run() {
+				ListIterator<Integer> iterator = list.listIterator();
+				while (iterator.hasNext()) {
+					Integer number = iterator.next();
+					System.out.println(number);
+				}
+			}
+		});
+
+		thread2.start();
+	}
+
+	public static void main(String[] args) {
+		IteratorFailFastTest tester = new IteratorFailFastTest();
+
+		tester.runIteratorThread();
+		tester.runUpdateThread();
+
+		List<String> safeList = Collections.synchronizedList(new ArrayList<>());
+		ArrayList<String> k = new ArrayList<>();
+		Collections.synchronizedList(k);
+
+		Iterator<String> iterator = safeList.iterator();
+
+		synchronized (safeList) {
+			while (iterator.hasNext()) {
+				String next = iterator.next();
+				System.out.println(next);
+			}
+		}
+	}
+}
+
+----------------------------------------------------------------------------------------------------------
+--> Files and Arrays
+
+package nexcruit;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+/**
+ * @author Rocke
+ *
+ */
+
+public class Nexcruit {
+	public static void main(String args[]) throws FileNotFoundException {
+
+//		 Scanner k = new Scanner(System.in);
+//		 System.out.println("Enter:");
+		// String z = k.nextLine();
+		// String[] zc = z.split(" ");
+		//
+		// for(int i =0; i< zc.length; i++) {
+		// zc[i]=zc[i]+" hey yikes";
+		// System.out.println(zc[i]);
+		// }
+
+		// Scanner b = new Scanner(System.in);
+		// String q=null;
+		// System.out.println("enter you string: ");
+		// while(b.hasNext()) {
+		// q= q+ " hey yiyes \n";
+		// }
+		// System.out.println(q);
+		// b.close();
+
+		// Scanner scan = new Scanner(new
+		// File("C:\\Users\\Rocke\\OneDrive\\Desktop\\test.txt"));
+		// while(scan.hasNext()) {
+		// System.out.println(scan.next()+" yeey yikes");
+		// }
+		// scan.close();
+
+		// Scanner scan = new Scanner(new
+		// File("C:\\Users\\Rocke\\OneDrive\\Desktop\\test.txt"));
+		// PrintWriter k = new
+		// PrintWriter("C:\\Users\\Rocke\\OneDrive\\Desktop\\test1.txt");// )
+		// while (scan.hasNextLine()) {
+		// String one = scan.nextLine();
+		// int hrs = scan.nextInt();
+		// float rate = scan.nextFloat();
+		// String two = one + "worked " + hrs + " hours at " + rate + " per hour and
+		// \nearned a total of $"
+		// + hrs * rate + ".";
+		// System.out.println(one + "worked " + hrs + " hours at " + rate + " per hour
+		// and \nearned a total of $"
+		// + hrs * rate + ".");
+		// k.println(two);
+		// }
+		// scan.close();
+		// k.close();
+
+		int[][] z = new int[4][5];
+		int t = 100;
+		for (int i = 0; i < z.length; i++) {
+			for (int j = 0; j < z[i].length; j++) {
+				z[i][j] = t;
+				t++;
+			}
+		}
+		// for(int i = 0; i< z.length; i++) {
+		// for(int j = 0; j<z[i].length; j++) {
+		// System.out.print(z[i][j]+" ");
+		// }
+		// System.out.println();
+		// }
+		String[] k = { "1", "2", "3", "4", "5" };
+		String z1 = Arrays.deepToString(z);
+		// System.out.println(z1);
+		ArrayList<String> rey = new ArrayList<String>(Arrays.asList(k));
+		// System.out.println(rey);
+		Boolean b = Arrays.asList(k).contains("3");
+		k[2] = "hi";
+
+		// System.out.println(b);
+
+		CopyOnWriteArrayList<String> reys = new CopyOnWriteArrayList<String>();
+		reys.add("lsdkjf");
+		reys.add("lsdkjf");
+		reys.add("lsdkjf");
+		for (String h : reys) {
+			reys.add("hi");
+			reys.remove(1);
+			System.out.println(reys);
+		}
+		System.out.println(reys);
+	}
+}
+
+----------------------------------------------------------------------------------------------------------
+--> Collections
+package nexcruit;
+
+import java.awt.List;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+
+public class Northwest {
+
+	public static void main(String[] args) throws FileNotFoundException {
+
+		List listNames = (List) Arrays.asList("Tom", "Joe", "Bill", "Dave", "John");
+
+		Iterator<String> iterator = ((java.util.List<String>) listNames).iterator();
+
+		while (iterator.hasNext()) {
+			String nextName = iterator.next();
+			System.out.println(nextName);
+		}
+
+		long startTime = System.currentTimeMillis();
+
+		ArrayList<Integer> list = new ArrayList<>();
+
+		for (int i = 0; i < 10_000_000; i++) {
+			list.add(i);
+		}
+
+		long endTime = System.currentTimeMillis();
+
+		long totalTime = endTime - startTime;
+
+		System.out.println("Test ArrayList: " + totalTime + " ms");
+
+	}
+
+//		ArrayList<String> k = new ArrayList<>();
+//		ArrayList<String> k1 = new ArrayList<>();
+//		k.add("hello");
+//		k.add("rammante");
+//		k.add("vachesindaa");
+//		k.add("cup");
+//		k.add("brush");
+//		k.add("movie");
+//		k.add("time");
+//		k.add("race");
+//		k.set(2,"java");
+//		k.remove("hello");
+//		for(int i =0 ; i<k.size(); i++) {
+//			System.out.println("List value: "+k.get(i));
+//			if(k.get(i).equals("rammante"));
+//				k.remove("rammante");
+//		}
+//		
+//	     Iterator<String> it = k.iterator();  
+//	     while(it.hasNext()) {
+//	    	 String am = it.next();
+//	    	 System.out.println("List Value: "+am);
+//	    	 if(am.equals("time")) {
+//	    		 k.remove(am);
+//	    	 }
+//	     }
+
+//		Vector<String> z = new Vector();
+//		Vector<String> z1 = new Vector();
+//		z.add("trying");
+//		z.add("the novel ");
+//		z.add("vector");
+//		
+//		z1.addAll(z);
+//		z1.add("abc");
+////		System.out.println(z1);
+//		for(int i =0; i<z1.size();i++) {
+////			System.out.println(z1.get(i));
+//		}
+}
+
+//_________________________________________________________________________________
+// - String reverse with String buffer
+//String z = "this is a test string";
+//String[] z1 = z.split("");
+//StringBuilder k = new StringBuilder();
+//for(int i = z1.length-1; i>=0; i--) {
+//	k.append(z1[i]);
+//}
+//String z3= k.toString();
+//System.out.println(z3);
+//k.reverse();
+
+//___________________________________________________________________________________
+// - String reverse with String.
+//String z = "this is a test string";
+//String[] z1 = z.split("");
+//String[] z2 = new String[z1.length];
+//for(int i =z1.length-1,j=0; i>=0; i--,j++) {
+////	System.out.println(z1[i]);
+//	z2[j]=z1[i];
+//}
+//String z3 = Arrays.toString(z2);		
+//System.out.println(z3);
+
+//	___________________________________________________________________________________________________
+// - Files and Exception
+//	Scanner k = new Scanner(new File("C:\\Users\\Rocke\\OneDrive\\Desktop\\data.txt"));
+//	Scanner k1 = new Scanner(new File("data.txt"));
+//	PrintWriter k3 = new PrintWriter("C:\\Users\\Rocke\\OneDrive\\Desktop\\dest.txt");
+//	
+//	Scanner may = new Scanner(System.in);
+//	int num = 0,count=1;
+//	System.out.println("number puudu: ");
+//	while(count<=3) {
+//		try {
+//			int k2 = may.nextInt();
+//			if(k2<0) {
+//				throw new UserException("Cannot have negative numbers bud");
+//				throw new UserException("Cannot have negatives bud:");
+//			}
+//			k3.println(k2);
+
+//			num=num+k2;
+//			count++;
+//		}
+//		catch(UserException e) {
+//			System.out.println(e.toString());
+//		}
+//	}
+//	System.out.println("sum is: "+num);
+////	k3.print("sum is: "+num);
+//	may.close();
+//	k3.close();
+//	
+//
+//	k1.close();
+//	k.close();
+//
+//	
+
+//___________________________________________________________________________________________________	
+
+//while (k.hasNext()) {
+//System.out.println(k.next() + " is " + k.nextInt() + " years old.");
+//		}		
+//
+//System.out.println("*************************************************");
+//while(k1.hasNext()) {
+//System.out.println("malang");
+//k1.next();
+//}
+//System.out.println("function over");
+
+----------------------------------------------------------------------------------------------------------
+--> Comparing
+import java.awt.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+
+public class Check {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+//		System.out.println("apple".compareTo("banana"));
+//		boolean b1 = true, b2 = false; int i1 =1, i2 = 2;
+////		System.out.println(b1||!b2);
+		ArrayList<String> k = new ArrayList<>();
+		k.add("bhii");
+		k.add("aii");
+		k.add("oii");
+		k.add("bii");
+		k.add("aaaa");
+		k.sort(Comparator.comparing(String::toString));
+		for (String z : k) {
+			System.out.println(z);
+		}
+		String b = "ahsldfkjsdfl";
+		System.out.println(b.substring(99, 3));
+//		System.out.println("hi" instanceof Object);
+	}
+
+}
+
+----------------------------------------------------------------------------------------------------------
+--> Sample Exceptions
+package nexcruit;
+
+public class UserException extends Exception {
+	String z = null;
+
+	public UserException() {
+	};
+
+	public UserException(String pora) {
+		this.z = pora;
+	}
+
+	public String toString() {
+		return z + "  " + "came to user exception";
+	}
+
+}
+
+
+
+
